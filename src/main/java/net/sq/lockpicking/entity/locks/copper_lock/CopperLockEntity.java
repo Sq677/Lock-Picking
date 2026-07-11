@@ -20,7 +20,6 @@ import net.sq.lockpicking.entity.locks.LockEntity;
 import net.sq.lockpicking.entity.locks.LockEntityManager;
 
 public class CopperLockEntity extends LockEntity {
-
     private static final TrackedData<Boolean> IS_OPENING = DataTracker.registerData(CopperLockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> IS_OPEN = DataTracker.registerData(CopperLockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
@@ -34,6 +33,9 @@ public class CopperLockEntity extends LockEntity {
         super(type, world);
         this.setNoGravity(true);
         this.noClip = true;
+        if (!world.isClient) {
+            System.out.println("[LockMod LOG] Lock Entity INSTANTIATED on the server!");
+        }
     }
 
     @Override

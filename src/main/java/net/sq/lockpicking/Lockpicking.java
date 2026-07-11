@@ -33,7 +33,6 @@ import net.sq.lockpicking.entity.locks.LockEntityManager;
 public class Lockpicking implements ModInitializer {
 	public static final String MOD_ID = "lockpicking";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	private int tickCounter = 0;
 	public static final net.minecraft.util.Identifier UNLOCK_PACKET_ID = net.minecraft.util.Identifier.of(MOD_ID, "unlock_chest");
 	public static final RiskyUnlockCriterion RISKY_UNLOCK = net.minecraft.advancement.criterion.Criteria.register("lockpicking:risky_unlock", new RiskyUnlockCriterion());
 
@@ -250,11 +249,9 @@ public class Lockpicking implements ModInitializer {
 			LockEntityManager.processQueue();
 			ChestAlarm.tick(world);
 
-			tickCounter++;
-			if (tickCounter < 40) {
+			if (world.getTime() % 40 != 0) {
 				return;
 			}
-			tickCounter = 0;
 
 			for (ServerPlayerEntity player : world.getPlayers()) {
 				ChunkPos playerChunk = player.getChunkPos();
