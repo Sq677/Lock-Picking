@@ -80,7 +80,6 @@ public class Lockpicking implements ModInitializer {
 		ModItems.register();
 		ModLootTableModifiers.modifyLootTables();
 
-		LOGGER.info("[Lockpicking] Guard Villagers mod loaded: {}", FabricLoader.getInstance().isModLoaded("guardvillagers"));
 
 		PayloadTypeRegistry.playC2S().register(UnlockChestPayload.ID, UnlockChestPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DamageLockpickPayload.ID, DamageLockpickPayload.CODEC);
@@ -124,6 +123,11 @@ public class Lockpicking implements ModInitializer {
 								offHand.decrement(1);
 							}
 							player.currentScreenHandler.sendContentUpdates();
+
+								customChest.setLocked(false);
+								customChest.setLockType(null);
+								customChest.setOwnerUuid(null);
+								unlockOtherHalf(player.getWorld(), chestPos);
 						}
 
 						Vec3d chestVec = Vec3d.ofCenter(chestPos);
@@ -185,7 +189,6 @@ public class Lockpicking implements ModInitializer {
 			context.server().execute(() -> {
 				ServerPlayerEntity player = context.player();
 				BlockPos chestPos = payload.pos();
-				LOGGER.info("[Lockpicking] StartLockpickingPayload received at {}", chestPos);
 
 				Vec3d chestVec = Vec3d.ofCenter(chestPos);
 				double range = 8.0;
@@ -200,7 +203,6 @@ public class Lockpicking implements ModInitializer {
 					piglin -> true
 				);
 
-				LOGGER.info("[Lockpicking] Found {} piglins nearby", piglins.size());
 
 				piglins.forEach(piglin -> {
 
@@ -212,7 +214,6 @@ public class Lockpicking implements ModInitializer {
 				});
 
 				boolean guardVillagersLoaded = FabricLoader.getInstance().isModLoaded("guardvillagers");
-				LOGGER.info("[Lockpicking] Checking Guard Villagers: {}", guardVillagersLoaded);
 				if (guardVillagersLoaded) {
 					try {
 						Class<?> guardClass = Class.forName("dev.sterner.guardvillagers.common.entity.GuardEntity");
@@ -223,7 +224,6 @@ public class Lockpicking implements ModInitializer {
 							entity -> guardClass.isInstance(entity)
 						);
 
-						LOGGER.info("[Lockpicking] Found {} guards nearby", guards.size());
 
 						guards.forEach(guard -> {
 							guard.setTarget(player);
