@@ -33,9 +33,6 @@ public class CopperLockEntity extends LockEntity {
         super(type, world);
         this.setNoGravity(true);
         this.noClip = true;
-        if (!world.isClient) {
-            System.out.println("[LockMod LOG] Lock Entity INSTANTIATED on the server!");
-        }
     }
 
     @Override
